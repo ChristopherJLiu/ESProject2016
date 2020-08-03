@@ -1,0 +1,138 @@
+#!/bin/bash
+
+YELLOW='\033[0;33m'
+BLUE='\033[0;34m'
+CYAN='\033[0;36m'
+NC='\033[0m'
+
+PROJECT_NAME="software-engineering-2016"
+LOGS_DIR=${HOME}/api_logs
+
+option=$1
+
+function print_help {
+	usage=$(cat <<-END
+\n[WARNING] Further down the line, our API will be moved to its own dedicated server. When that happens, you will no longer be able to upgrade your local API. Worry not, the implementation of our user stories will still work - but every reference to your local instance will have to be changed to a remote one. Check any updates at es2016.dei.uc.pt (you need to be connected to DEI's network to do so).\n
+\n
+ Core stages:\n
+\t upgrade (Updates the API to the latest version)\n
+\t build (Makes a clean API build)\n
+\t run (Runs the API)\n
+\t help (Prints this dialog)\n
+\n
+ Advanced stages:\n
+\t install-dependencies (Installs dependencies)\n
+\t uninstall-dependencies (Uninstalls dependencies)\n
+\t show-logs (Shows the API's logs directory)\n
+\t delete-logs (Deletes API's logs)\n
+\t cleanup (Deletes and uninstalls everything related to our API)\n
+\n
+ Usage:\n
+\t (0) Before you do anything else, the first time you run the script\n
+\t (1) To upgrade the API\n
+\t (2) Every time you change the source code\n
+\t (3) Every time you want to simply run the API\n
+\n
+\t (0) ./api install-dependencies && ./api upgrade\n
+\t (1) ./api upgrade && ./api build && ./api run\n
+\t (2) ./api build && ./api run\n
+\t (3) ./api run\n
+\n
+	END
+    )
+    echo -e $usage
+}
+
+function delete_logs {
+    echo -e "${CYAN}[  0%] Deleting log files${NC}"
+    rm -rf ${LOGS_DIR}
+    echo -e "${CYAN}[100%] Done!${NC}"
+}
+
+function uninstall_dependencies {
+    echo -e "${CYAN}[  0%] Removing Maven${NC}"
+    sudo apt-get remove maven
+    echo -e "${CYAN}[ 33%] Removing Oracle's Java 8${NC}"
+    sudo apt-get remove oracle-java8-installer
+    echo -e "${CYAN}[ 66%] Cleaning unusued dependencies...${NC}"
+    sudo apt-get autoremove
+    echo -e "${CYAN}[100%] Done!${NC}"
+}
+
+case $option in
+    upgrade)
+        echo -e "${CYAN}[  0%] Deleting previous API version${NC}"
+        rm -rf ${PROJECT_NAME}
+        echo -e "${CYAN}[ 33%] Cloning latest version from repository${NC}"
+        git clone https://gitlab.com/nunomota/${PROJECT_NAME}.git
+        echo -e "${CYAN}[ 66%] Cleaning unnecessary files${NC}"
+        rm -f ${PROJECT_NAME}/api
+        rm -f ${PROJECT_NAME}/.gitignore
+        rm -f ${PROJECT_NAME}/.gitlab-ci.yml
+        rm -f ${PROJECT_NAME}/README.md
+        rm -f ${PROJECT_NAME}/GitDashboard.iml
+        rm -rf ${PROJECT_NAME}/.git
+        rm -rf ${PROJECT_NAME}/.idea
+        echo -e "${CYAN}[100%] Done!${NC}"
+    ;;
+    build)
+        if [ ! -d ${PROJECT_NAME} ]; then
+			echo -e "[ERROR] Cannot build non-existent project. Run './api upgrade' to fix this."
+			exit
+		fi
+        echo -e "${CYAN}[  0%] Deleting ${PROJECT_NAME}/target/...${NC}"
+        rm -rf ${PROJECT_NAME}/target/
+        echo -e "${CYAN}[ 50%] Running Maven 'package' stage...${NC}"
+        cd ${PROJECT_NAME}
+        mvn package
+        echo -e "${CYAN}[100%] Done!${NC}"
+    ;;
+    run)
+        if [ ! -d ${PROJECT_NAME} ]; then
+			echo -e "[ERROR] Cannot run non-existent project. Run './api upgrade' to fix this."
+			exit
+		fi
+        echo -e "${CYAN}Running API with Maven...${NC}"
+        cd ${PROJECT_NAME}
+        mvn exec:java
+        echo -e "${CYAN}API terminated${NC}"
+    ;;
+    install-dependencies)
+        echo -e "${CYAN}[  0%] Adding necessary repositories${NC}"
+        sudo apt-add-repository ppa:webupd8team/java
+        echo -e "${CYAN}[ 25%] Updating resources${NC}"
+        sudo apt-get update
+        echo -e "${CYAN}[ 50%] Installing Maven${NC}"
+        sudo apt-get install maven
+        echo -e "${CYAN}[ 75%] Installing Oracle's Java 8${NC}"
+        sudo apt-get install oracle-java8-installer
+        echo -e "${CYAN}[100%] Done!${NC}"
+    ;;
+    uninstall-dependencies)
+        uninstall_dependencies
+    ;;
+    show-logs)
+        if [ ! -d ${LOGS_DIR} ]; then
+			echo -e "You have to run the API first to generate log files."
+			exit
+		fi
+        echo -e "${CYAN}Logs' directory: ${LOGS_DIR}${NC}"
+    ;;
+    delete-logs)
+        delete_logs
+    ;;
+    cleanup)
+        echo -e "${CYAN}Cleanup stage started!${NC}"
+        delete_logs
+        uninstall_dependencies
+        echo -e "${CYAN}Deleting API${NC}"
+        rm -rf ${PROJECT_NAME}
+        echo -e "${CYAN}Cleanup stage finished!${NC}"
+    ;;
+    help)
+        print_help
+    ;;
+    *)
+        echo -e "Please specify a valid target stage (use 'help' to see available options)"
+    ;;
+esac

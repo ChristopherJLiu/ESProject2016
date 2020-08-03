@@ -1,0 +1,199 @@
+*{
+	margin: 0 auto;
+	padding: 0;
+	font-family: sans-serif;
+}
+
+a, u{
+	text-decoration: none;
+}
+
+h4{
+	color: rgb(100, 150, 250);
+}
+
+
+body{
+	background-color: rgb(50,50,50);
+	margin: 0 auto;
+	width: 100%;
+	height: 100%;
+}
+
+header{
+	font-variant-caps: small-caps;
+	display: block;
+	position:fixed;
+	text-align:right;
+	height: 80px;
+	width: 100%;
+	color: rgb(50,50,50);
+	font-size: 50px;
+	padding-top: 20px;
+	padding-left: 120px;
+}
+
+.nav{
+	text-align: left;
+	max-width:200px;
+	z-index: 10;
+}
+
+#nav_bars{
+	top:200px;
+	position:relative;
+	max-width:200px;
+	float:left;
+	display:block;
+}
+
+h1{
+    position: absolute;
+    margin-top: 20px;
+    float: left;
+    margin-left: 120px;
+    width: auto;
+	left: 5%;
+	top: 65px;
+}
+
+#pagina_wrapper{
+	padding-left: 15px;
+	margin-bottom: 15px;
+	position:relative;
+	float: left;
+	display: block;
+	top: 200px;
+	width: 60vw;
+	min-width: 320px;
+	height: 60vh;
+}
+
+#file_select{
+	background-color: rgb(220,220,220);
+	border-radius: 10px;
+	display: block;
+	padding: 15px;
+	width:100%;
+	height:100%;
+	margin:0;
+	border-bottom: 2px solid rgb(200,200,200);
+}
+
+#file_select div{
+	color: rgb(50,50,50);
+    
+}
+
+.select{
+	background-color: rgb(100,150,250);
+	color: white;
+}
+
+#directory_travel{
+    
+    display: inline-block;
+    width: 100%;
+}
+#directory_travel h4{
+    width: 50%;
+    float: left;
+}
+
+
+/*********************************/
+#team_members{
+	background-color: rgb(220,220,220);
+	margin: 8px;
+	border-radius: 10px;
+	padding: 15px;
+	margin-left: 15px;
+	margin-top: 15px;
+	display: block;
+	position: relative;
+	top: 185px;
+	float: left;
+	width: auto;
+	min-width: 250px;
+	height: 35vh;
+}
+
+.panel-body{
+    height: 80%;
+	overflow-y: scroll;
+}
+
+.main-panel{
+    height: 85%;
+	overflow-y: scroll;
+}
+
+
+.userAvatar{
+    height: 25px;
+    width: 25px;
+    border-radius: 50%;
+}
+
+/*div.member:hover{
+	border: 2px solid rgb(100, 150, 250);
+}
+
+div.member:active{
+	background-color: rgb(100,150,250);
+}*/
+.member h6{
+	display: inline;
+}
+
+.media{
+    padding-top: 10px;
+    margin-right: 2%;
+    text-align: right;
+}
+
+#user_img{
+    float: right;
+    width: 40px;
+}
+
+
+
+/********************************/
+.textoFiles{
+    color: black;
+}
+.textoFiles:hover{
+    text-decoration: none;4
+}
+
+.verCommitsText{
+    margin-top: -10px;
+    padding-left: 3vw;
+    padding-bottom: 0px;
+    margin-bottom: -13px;
+    font-size: 10px;
+    visibility: hidden;
+    color: dimgrey;
+}
+
+.verCommits:hover .verCommitsText{
+        visibility: visible;
+}
+
+td{
+    padding: 0px;
+}
+
+
+
+.commit_info{
+  position: relative;
+  background-color: rgb(250,255,200);
+  min-width: 500px;
+  width: auto;
+  margin-bottom: 10px;
+  overflow-y: scroll;
+  text-align: center;
+  font-family: Montserrat;
+}
